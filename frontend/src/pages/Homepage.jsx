@@ -647,6 +647,7 @@ const Homepage = () => {
                       value={formData.reason} 
                       onValueChange={(value) => handleFormChange("reason", value)}
                       disabled={formSubmitting}
+                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a reason" />
