@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the complete backend API for Pranay's portfolio website including health check, reflections API, contact form API, admin authentication, database integration, and error handling."
+user_problem_statement: "Test the complete frontend functionality for Pranay's portfolio website with full backend integration including homepage navigation, reflections section integration, contact form, admin dashboard authentication, and CRUD operations."
 
 backend:
   - task: "Health Check & Basic Functionality"
