@@ -77,7 +77,7 @@ class Reflection(ReflectionBase):
 # Contact Models
 class ContactSubmissionCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
-    email: str = Field(..., regex=r'^[^@]+@[^@]+\.[^@]+$')
+    email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$')
     reason: ContactReason
     message: str = Field(..., min_length=1, max_length=2000)
 
