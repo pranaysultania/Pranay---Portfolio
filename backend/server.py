@@ -1,7 +1,7 @@
+
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, Cookie
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
@@ -22,13 +22,8 @@ ROOT_DIR = Path(__file__).parent
 from dotenv import load_dotenv
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db_name = os.environ.get('DB_NAME', 'pranay_portfolio')
-
 # Initialize database
-db = init_database(client, db_name)
+db = init_database()
 
 # Create the main app
 app = FastAPI(title="Pranay Portfolio API", version="1.0.0")
@@ -286,8 +281,11 @@ app.include_router(api_router)
 async def startup_event():
     """Initialize database and seed data on startup"""
     try:
-        # Clean up expired sessions
-        await db.cleanup_expired_sessions()
+        # Connect to database
+        await db.connect()
+        
+        # Create tables
+        await db.create_tables()
         
         # Seed initial data
         await db.seed_initial_data()
@@ -298,10 +296,13 @@ async def startup_event():
 
 # Shutdown event
 @app.on_event("shutdown")
-async def shutdown_db_client():
+async def shutdown_event():
     """Close database connection on shutdown"""
-    client.close()
-    logger.info("Database connection closed")
+    try:
+        await db.disconnect()
+        logger.info("Database connection closed")
+    except Exception as e:
+        logger.error(f"Error during shutdown: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
