@@ -94,6 +94,13 @@ const Homepage = () => {
     setFormSubmitting(true);
     setFormError("");
 
+    // Basic form validation
+    if (!formData.name || !formData.email || !formData.reason || !formData.message) {
+      setFormError("Please fill in all required fields.");
+      setFormSubmitting(false);
+      return;
+    }
+
     try {
       const response = await contactApi.submit(formData);
       
