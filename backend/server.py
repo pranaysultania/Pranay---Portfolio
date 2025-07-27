@@ -232,13 +232,14 @@ async def admin_login(credentials: AdminLogin):
             )
             # Set secure httpOnly cookie
             response.set_cookie(
-                key="session_id",
-                value=session_id,
-                httponly=True,
-                secure=False,  # Set to True in production with HTTPS
-                samesite="lax",
-                max_age=86400  # 24 hours
-            )
+    key="session_id",
+    value=session_id,
+    httponly=True,
+    secure=True,  # Required for cross-origin
+    samesite="none",  # Allow cross-origin cookies
+    max_age=86400,  # 24 hours
+    domain=None  # Allow cookie to be sent to different domains
+)
             return response
         else:
             return AdminLoginResponse(
