@@ -705,7 +705,7 @@ const Homepage = () => {
     variant="outline" 
     size="sm" 
     className="border-[#007C91] text-[#007C91] hover:bg-[#007C91] hover:text-white"
-    onClick={() => window.open('https://linkedin.com/in/pranaysultania', '_blank')}
+    onClick={() => window.open('https://www.linkedin.com/in/pranay-sultania-06297899/', '_blank')}
   >
     <Linkedin className="h-4 w-4 mr-2" />
     LinkedIn
@@ -714,7 +714,7 @@ const Homepage = () => {
     variant="outline" 
     size="sm" 
     className="border-[#8FCB9B] text-[#8FCB9B] hover:bg-[#8FCB9B] hover:text-white"
-    onClick={() => window.open('https://instagram.com/pranaysultania', '_blank')}
+    onClick={() => window.open('https://www.instagram.com/pranayog_?igsh=bWFtNmd6c3R5Yno%3D&utm_source=qr', '_blank')}
   >
     <Instagram className="h-4 w-4 mr-2" />
     Instagram
@@ -746,7 +746,7 @@ const Homepage = () => {
     variant="ghost" 
     size="sm" 
     className="text-gray-400 hover:text-white"
-    onClick={() => window.open('https://linkedin.com/in/pranaysultania', '_blank')}
+    onClick={() => window.open('https://www.linkedin.com/in/pranay-sultania-06297899/', '_blank')}
   >
     <Linkedin className="h-5 w-5" />
   </Button>
@@ -754,7 +754,7 @@ const Homepage = () => {
     variant="ghost" 
     size="sm" 
     className="text-gray-400 hover:text-white"
-    onClick={() => window.open('https://instagram.com/pranaysultania', '_blank')}
+    onClick={() => window.open('https://www.instagram.com/pranayog_?igsh=bWFtNmd6c3R5Yno%3D&utm_source=qr', '_blank')}
   >
     <Instagram className="h-5 w-5" />
   </Button>
