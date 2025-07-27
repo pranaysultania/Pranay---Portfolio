@@ -701,14 +701,24 @@ const Homepage = () => {
                   <span className="text-gray-600">+91 81056 57505</span>
                 </div>
                 <div className="flex items-center gap-4 pt-4">
-                  <Button variant="outline" size="sm" className="border-[#007C91] text-[#007C91] hover:bg-[#007C91] hover:text-white">
-                    <Linkedin className="h-4 w-4 mr-2" />
-                    LinkedIn
-                  </Button>
-                  <Button variant="outline" size="sm" className="border-[#8FCB9B] text-[#8FCB9B] hover:bg-[#8FCB9B] hover:text-white">
-                    <Instagram className="h-4 w-4 mr-2" />
-                    Instagram
-                  </Button>
+                  <Button 
+  variant="outline" 
+  size="sm" 
+  className="border-[#007C91] text-[#007C91] hover:bg-[#007C91] hover:text-white"
+  onClick={() => window.open('https://linkedin.com/in/pranaysultania', '_blank')}
+>
+  <Linkedin className="h-4 w-4 mr-2" />
+  LinkedIn
+</Button>
+<Button 
+  variant="outline" 
+  size="sm" 
+  className="border-[#8FCB9B] text-[#8FCB9B] hover:bg-[#8FCB9B] hover:text-white"
+  onClick={() => window.open('https://instagram.com/pranaysultania', '_blank')}
+>
+  <Instagram className="h-4 w-4 mr-2" />
+  Instagram
+</Button>
                 </div>
               </div>
 
