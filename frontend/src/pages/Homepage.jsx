@@ -701,26 +701,25 @@ const Homepage = () => {
                   <span className="text-gray-600">+91 81056 57505</span>
                 </div>
                 <div className="flex items-center gap-4 pt-4">
-                  <Button 
-  variant="outline" 
-  size="sm" 
-  className="border-[#007C91] text-[#007C91] hover:bg-[#007C91] hover:text-white"
-  onClick={() => window.open('https://linkedin.com/in/pranaysultania', '_blank')}
->
-  <Linkedin className="h-4 w-4 mr-2" />
-  LinkedIn
-</Button>
-<Button 
-  variant="outline" 
-  size="sm" 
-  className="border-[#8FCB9B] text-[#8FCB9B] hover:bg-[#8FCB9B] hover:text-white"
-  onClick={() => window.open('https://instagram.com/pranaysultania', '_blank')}
->
-  <Instagram className="h-4 w-4 mr-2" />
-  Instagram
-</Button>
-                </div>
-              </div>
+  <Button 
+    variant="outline" 
+    size="sm" 
+    className="border-[#007C91] text-[#007C91] hover:bg-[#007C91] hover:text-white"
+    onClick={() => window.open('https://linkedin.com/in/pranaysultania', '_blank')}
+  >
+    <Linkedin className="h-4 w-4 mr-2" />
+    LinkedIn
+  </Button>
+  <Button 
+    variant="outline" 
+    size="sm" 
+    className="border-[#8FCB9B] text-[#8FCB9B] hover:bg-[#8FCB9B] hover:text-white"
+    onClick={() => window.open('https://instagram.com/pranaysultania', '_blank')}
+  >
+    <Instagram className="h-4 w-4 mr-2" />
+    Instagram
+  </Button>
+</div>
 
               <Card className="p-6 bg-[#007C91]/5">
                 <h3 className="font-semibold text-[#007C91] mb-3">Quick Response Times</h3>
@@ -742,16 +741,31 @@ const Homepage = () => {
             <div className="font-serif text-2xl font-bold mb-4">Pranay Sultania</div>
             <p className="text-gray-400 mb-6">Where Capital Meets Consciousness</p>
             <div className="flex justify-center space-x-6 mb-8">
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                <Linkedin className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                <Instagram className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                <Mail className="h-5 w-5" />
-              </Button>
-            </div>
+  <Button 
+    variant="ghost" 
+    size="sm" 
+    className="text-gray-400 hover:text-white"
+    onClick={() => window.open('https://linkedin.com/in/pranaysultania', '_blank')}
+  >
+    <Linkedin className="h-5 w-5" />
+  </Button>
+  <Button 
+    variant="ghost" 
+    size="sm" 
+    className="text-gray-400 hover:text-white"
+    onClick={() => window.open('https://instagram.com/pranaysultania', '_blank')}
+  >
+    <Instagram className="h-5 w-5" />
+  </Button>
+  <Button 
+    variant="ghost" 
+    size="sm" 
+    className="text-gray-400 hover:text-white"
+    onClick={() => window.open('mailto:pranaysultania6@gmail.com', '_blank')}
+  >
+    <Mail className="h-5 w-5" />
+  </Button>
+</div>
             <div className="border-t border-gray-800 pt-8">
               <p className="text-gray-400 text-sm">
                 &copy; 2024 Pranay Sultania. All rights reserved.
