@@ -5,6 +5,7 @@ import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Alert, AlertDescription } from "../components/ui/alert";
 import { 
   ChevronDown, 
   Mail, 
@@ -22,18 +23,31 @@ import {
   User,
   Briefcase,
   BookOpen,
-  Camera
+  Camera,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
-import { mockReflections, mockYogaOfferings, mockInvestments, mockVolunteeringInitiatives, mockTestimonials } from "../mock";
+import { mockYogaOfferings, mockInvestments, mockVolunteeringInitiatives, mockTestimonials } from "../mock";
+import { reflectionApi, contactApi, apiUtils } from "../services/api";
+import { useToast } from "../hooks/use-toast";
 
 const Homepage = () => {
+  const { toast } = useToast();
   const [activeSection, setActiveSection] = useState("home");
+  const [reflections, setReflections] = useState([]);
+  const [reflectionsLoading, setReflectionsLoading] = useState(true);
+  const [reflectionsError, setReflectionsError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [categories, setCategories] = useState([]);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     reason: "",
     message: ""
   });
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -44,14 +58,63 @@ const Homepage = () => {
 
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (formError) setFormError("");
   };
 
-  const handleSubmit = (e) => {
+  // Load reflections on component mount
+  useEffect(() => {
+    loadReflections();
+  }, []);
+
+  const loadReflections = async (category = null) => {
+    try {
+      setReflectionsLoading(true);
+      setReflectionsError(null);
+      
+      const response = await reflectionApi.getAll(category);
+      setReflections(response.reflections || []);
+      setCategories(['all', ...response.categories || []]);
+    } catch (error) {
+      const errorInfo = apiUtils.handleError(error);
+      setReflectionsError(errorInfo.message);
+      console.error('Failed to load reflections:', error);
+    } finally {
+      setReflectionsLoading(false);
+    }
+  };
+
+  const handleCategoryFilter = (category) => {
+    setSelectedCategory(category);
+    const filterCategory = category === 'all' ? null : category;
+    loadReflections(filterCategory);
+  };
+
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Mock form submission
-    alert("Thank you for reaching out! I'll get back to you soon.");
-    setFormData({ name: "", email: "", reason: "", message: "" });
+    setFormSubmitting(true);
+    setFormError("");
+
+    try {
+      const response = await contactApi.submit(formData);
+      
+      if (response.success) {
+        toast({
+          title: "Message Sent!",
+          description: response.message,
+        });
+        setFormData({ name: "", email: "", reason: "", message: "" });
+      }
+    } catch (error) {
+      const errorInfo = apiUtils.handleError(error);
+      setFormError(errorInfo.message);
+      toast({
+        title: "Error",
+        description: errorInfo.message,
+        variant: "destructive",
+      });
+    } finally {
+      setFormSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -361,48 +424,87 @@ const Homepage = () => {
             </p>
           </div>
 
+          {/* Category Filter */}
           <div className="flex justify-center mb-8">
             <div className="flex space-x-2 bg-white rounded-lg p-1 shadow-sm">
-              <Button variant="default" size="sm" className="bg-[#007C91] text-white">All</Button>
-              <Button variant="ghost" size="sm">Journal</Button>
-              <Button variant="ghost" size="sm">Blog</Button>
-              <Button variant="ghost" size="sm">Artwork</Button>
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "ghost"}
+                  size="sm"
+                  className={selectedCategory === category ? "bg-[#007C91] text-white" : ""}
+                  onClick={() => handleCategoryFilter(category)}
+                >
+                  {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
+                </Button>
+              ))}
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {mockReflections.map((reflection) => (
-              <Card key={reflection.id} className="hover:shadow-lg transition-all duration-300 group">
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge variant="secondary" className={`
-                      ${reflection.category === 'journal' ? 'bg-[#FFD447]/20 text-[#007C91]' : ''}
-                      ${reflection.category === 'blog' ? 'bg-[#8FCB9B]/20 text-[#007C91]' : ''}
-                      ${reflection.category === 'artwork' ? 'bg-[#007C91]/20 text-[#007C91]' : ''}
-                    `}>
-                      {reflection.category === 'journal' && <BookOpen className="h-3 w-3 mr-1" />}
-                      {reflection.category === 'blog' && <User className="h-3 w-3 mr-1" />}
-                      {reflection.category === 'artwork' && <Camera className="h-3 w-3 mr-1" />}
-                      {reflection.category}
-                    </Badge>
-                    <span className="text-sm text-gray-500">{reflection.readTime}</span>
-                  </div>
-                  <CardTitle className="group-hover:text-[#007C91] transition-colors">
-                    {reflection.title}
-                  </CardTitle>
-                  <CardDescription>{reflection.excerpt}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{reflection.date}</span>
-                    <Button variant="ghost" size="sm" className="text-[#007C91] p-0 h-auto">
-                      Read more <ArrowRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {/* Loading State */}
+          {reflectionsLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-[#007C91]" />
+              <span className="ml-2 text-gray-600">Loading reflections...</span>
+            </div>
+          )}
+
+          {/* Error State */}
+          {reflectionsError && (
+            <div className="flex justify-center py-12">
+              <Alert className="max-w-md">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {reflectionsError}
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
+          {/* Reflections Grid */}
+          {!reflectionsLoading && !reflectionsError && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {reflections.map((reflection) => (
+                <Card key={reflection.id} className="hover:shadow-lg transition-all duration-300 group">
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant="secondary" className={`
+                        ${reflection.category === 'journal' ? 'bg-[#FFD447]/20 text-[#007C91]' : ''}
+                        ${reflection.category === 'blog' ? 'bg-[#8FCB9B]/20 text-[#007C91]' : ''}
+                        ${reflection.category === 'artwork' ? 'bg-[#007C91]/20 text-[#007C91]' : ''}
+                      `}>
+                        {reflection.category === 'journal' && <BookOpen className="h-3 w-3 mr-1" />}
+                        {reflection.category === 'blog' && <User className="h-3 w-3 mr-1" />}
+                        {reflection.category === 'artwork' && <Camera className="h-3 w-3 mr-1" />}
+                        {reflection.category}
+                      </Badge>
+                      <span className="text-sm text-gray-500">{reflection.read_time}</span>
+                    </div>
+                    <CardTitle className="group-hover:text-[#007C91] transition-colors">
+                      {reflection.title}
+                    </CardTitle>
+                    <CardDescription>{reflection.excerpt}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">
+                        {apiUtils.formatDate(reflection.date)}
+                      </span>
+                      <Button variant="ghost" size="sm" className="text-[#007C91] p-0 h-auto">
+                        Read more <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {!reflectionsLoading && !reflectionsError && reflections.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No reflections found for the selected category.</p>
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <Button size="lg" variant="outline" className="border-[#007C91] text-[#007C91] hover:bg-[#007C91] hover:text-white">
@@ -501,7 +603,14 @@ const Homepage = () => {
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="space-y-6">
               <Card className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  {formError && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{formError}</AlertDescription>
+                    </Alert>
+                  )}
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -509,6 +618,7 @@ const Homepage = () => {
                         value={formData.name}
                         onChange={(e) => handleFormChange("name", e.target.value)}
                         placeholder="Your name"
+                        disabled={formSubmitting}
                         required
                       />
                     </div>
@@ -519,13 +629,18 @@ const Homepage = () => {
                         value={formData.email}
                         onChange={(e) => handleFormChange("email", e.target.value)}
                         placeholder="your@email.com"
+                        disabled={formSubmitting}
                         required
                       />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Reason for Contact</label>
-                    <Select value={formData.reason} onValueChange={(value) => handleFormChange("reason", value)}>
+                    <Select 
+                      value={formData.reason} 
+                      onValueChange={(value) => handleFormChange("reason", value)}
+                      disabled={formSubmitting}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a reason" />
                       </SelectTrigger>
@@ -544,11 +659,24 @@ const Homepage = () => {
                       onChange={(e) => handleFormChange("message", e.target.value)}
                       placeholder="Your message..."
                       rows={4}
+                      disabled={formSubmitting}
                       required
                     />
                   </div>
-                  <Button type="submit" size="lg" className="w-full bg-[#007C91] hover:bg-[#007C91]/90">
-                    Send Message
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full bg-[#007C91] hover:bg-[#007C91]/90"
+                    disabled={formSubmitting}
+                  >
+                    {formSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
                   </Button>
                 </form>
               </Card>
