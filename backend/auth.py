@@ -4,7 +4,6 @@ import os
 import hashlib
 import secrets
 from models import AdminSession
-from database import get_database
 
 # Simple admin credentials (in production, use proper password hashing)
 ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
@@ -21,6 +20,9 @@ def verify_password(password: str, hashed: str) -> bool:
 async def authenticate_admin(username: str, password: str) -> Optional[str]:
     """Authenticate admin and return session ID"""
     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        # Import here to avoid circular imports
+        from database import get_database
+        
         # Create session
         session_id = secrets.token_urlsafe(32)
         expires_at = datetime.utcnow() + timedelta(hours=24)  # 24 hour session
@@ -39,6 +41,9 @@ async def verify_admin_session(session_id: str) -> bool:
     if not session_id:
         return False
     
+    # Import here to avoid circular imports
+    from database import get_database
+    
     db = get_database()
     session = await db.get_admin_session(session_id)
     return session is not None
@@ -47,6 +52,9 @@ async def logout_admin(session_id: str) -> bool:
     """Logout admin by deleting session"""
     if not session_id:
         return False
+    
+    # Import here to avoid circular imports
+    from database import get_database
     
     db = get_database()
     return await db.delete_admin_session(session_id)
