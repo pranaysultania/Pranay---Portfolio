@@ -1,0 +1,32 @@
+#!/bin/bash
+# Quick Deployment Script for Pranay's Portfolio
+
+echo "🚀 Preparing Pranay's Portfolio for Deployment..."
+
+# Create deployment package info
+echo "📦 Deployment Package Ready!"
+echo ""
+echo "✅ Files prepared:"
+echo "  - Frontend: React app with Vercel config"
+echo "  - Backend: FastAPI with Railway config"  
+echo "  - Database: MongoDB ready"
+echo "  - Images: All uploaded images included"
+echo "  - Admin: Dashboard ready (admin/pranay2024)"
+echo ""
+echo "🌐 Ready to deploy to:"
+echo "  - Frontend: Vercel (Free)"
+echo "  - Backend: Railway (Free tier)"
+echo "  - Database: Railway MongoDB (Free)"
+echo ""
+echo "⏱️  Total deployment time: ~10 minutes"
+echo "💰 Total cost: $0 (Free tiers)"
+echo ""
+echo "📋 Next steps:"
+echo "1. Push code to GitHub"
+echo "2. Connect Vercel to GitHub repo"
+echo "3. Connect Railway to GitHub repo"
+echo "4. Set environment variables"
+echo "5. Go live!"
+echo ""
+echo "🎉 Your portfolio will be live at:"
+echo "   https://pranay-sultania.vercel.app (or your custom domain)"
