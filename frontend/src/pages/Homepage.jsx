@@ -720,7 +720,8 @@ const Homepage = () => {
     Instagram
   </Button>
 </div>
-
+</div>
+              
               <Card className="p-6 bg-[#007C91]/5">
                 <h3 className="font-semibold text-[#007C91] mb-3">Quick Response Times</h3>
                 <ul className="space-y-2 text-sm text-gray-600">
